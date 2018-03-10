@@ -41,10 +41,9 @@ for eintrag in bayern3[10000:]:
         print('')
     
     except KeyError:
-        print('!!!!!!!!!!!!!!!!!!!!!')
         print(eintrag['datum_zeit'], ' ', eintrag['interpret'], ' ', eintrag['titel'], ': Fehler beim Lesen aus musicbrainz.')
-        print('!!!!!!!!!!!!!!!!!!!!!')
-        print
+        raise
+        
 #for release in result['release-list']:
 
     
