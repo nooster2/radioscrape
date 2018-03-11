@@ -52,3 +52,11 @@ class bayern3:
     
     def set_letzte_url(self, url):
         self.cursor.execute("UPDATE letztesParsen SET url = '" + url + "' WHERE id = 1")
+
+class songs:
+    def __init__(self):
+        self.cursor = conn.cursor()
+    
+    def laden(self):
+        return self.cursor.execute("""SELECT * FROM songs
+            WHERE veroeffentlichung IS NULL;""").fetchall()
