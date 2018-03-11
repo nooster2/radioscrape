@@ -1,13 +1,13 @@
 from bs4 import BeautifulSoup
-import sqlite3
 import urllib.request as urllib2
+import db
 
 # Connection zur Datenbank
-connection = sqlite3.connect('db.sqlite3')
-cursor = connection.cursor()
+db.connect()
+bayern3 = db.bayern3()
 
 # zuletzt geparste URL als Startpunkt zum weitermachen
-url = cursor.execute("select url from letztesParsen where id = 1").fetchone()[0]
+url = bayern3.get_letzte_url()
 
 # Ein Schleifendurchgang je URL
 while True:
@@ -25,28 +25,24 @@ while True:
             li_titel_interpret = zeit.next_sibling.next_sibling.find('li', 'title')
             interpret = li_titel_interpret.span.string
             titel = li_titel_interpret.span.next_sibling.next_sibling.string
-            try:
-                cursor.execute("""insert into bayern3(datum_zeit, interpret, titel)
-                                  values(?, ?, ?);""", (datum_zeit, interpret, titel))
-            except sqlite3.IntegrityError:
-                print("Datenbank Unique verletzt: " + datum_zeit)
+            
+            # In Datenbank eintragen
+            bayern3.eintragen(datum_zeit, interpret, titel)
 
         # nächste URL
         url = 'http://www.br.de' + soup.find('p', 'playlist_navi_down').a.get('href')
 
     except AttributeError: # wird ausgelöst, wenn keine "nächste URL" gefunden werden kann
-        print("AttributeError. Vermutlich letzte Seite erreicht: " + datum_zeit)
+        print("AttributeError. Letzte Seite erreicht?: " + datum_zeit)
         break
     
     except:
-        print("Unerwarteter Fehler")
         raise
     
     finally:
-        cursor.execute("update letztesParsen set url = '" + url + "' where id = 1")
-        connection.commit()
+        bayern3.set_letzte_url(url)
+        db.commit()
 
-
-connection.close()
+db.close()
 
 
