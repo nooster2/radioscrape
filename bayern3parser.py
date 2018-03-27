@@ -27,7 +27,10 @@ while True:
             titel = li_titel_interpret.span.next_sibling.next_sibling.string
             
             # In Datenbank eintragen
-            bayern3.eintragen(datum_zeit, interpret, titel)
+            try:
+                bayern3.eintragen(datum_zeit, interpret, titel)
+            except:
+                print(datum_zeit)
 
         # nächste URL
         url = 'http://www.br.de' + soup.find('p', 'playlist_navi_down').a.get('href')
