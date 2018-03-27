@@ -52,3 +52,21 @@ class bayern3:
     
     def set_letzte_url(self, url):
         self.cursor.execute("UPDATE letztesParsen SET url = '" + url + "' WHERE id = 1")
+
+class songs:
+    def __init__(self):
+        self.cursor = conn.cursor()
+    
+    def laden(self):
+        return self.cursor.execute("""SELECT * FROM songs
+            WHERE musicid IS NULL;""").fetchall()
+    
+    def schreibemusicbrainz(self, task):
+        sql ="""UPDATE songs
+        SET musicid = ?,
+            label = ?,
+            land = ?,
+            veroeffentlichung = ?,
+            musicbrainzscore = ?
+        WHERE id = ?"""
+        return self.cursor.execute(sql,task)
