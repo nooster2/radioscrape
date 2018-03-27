@@ -11,9 +11,10 @@ musicbrainzngs.set_useragent("radioscrape", "0.1", contact=None)
 db.connect()
 songs = db.songs()
 
-for eintrag in songs.laden()[:10]:
+for eintrag in songs.laden():
     try:
         # Jetzt wird geschaut, welche Daten MB für uns zu diesem Song parat hält
+        print()
         result = musicbrainzngs.search_releases(artist=eintrag['interpret'], release=eintrag['titel'])
         release=result['release-list'][0]
         #print(release)
@@ -26,7 +27,11 @@ for eintrag in songs.laden()[:10]:
         mb_interpret = release['artist-credit'][0]['artist']['name']
         mb_titel = release['title']
         mb_jahr = release['date']
-        #mb_label=release['label-info-list'][0]['label']['name']
+        #
+        try:
+            mb_label=release['label-info-list'][0]['label']['name']
+        except:
+            mb_label="NaN"
         mb_land = release['release-event-list'][0]['area']['name']    
 
         if mb_score < 80:
@@ -37,10 +42,19 @@ for eintrag in songs.laden()[:10]:
         print('Interpret: ', mb_interpret)
         print('Titel: ', mb_titel)
         print('Jahr: ', mb_jahr)
-        #print('Label: ', mb_label)
+        print('Label: ', mb_label)
         print('Land: ', mb_land)
         print('')
-    
+        
+        # Jetzt müssen die Daten noch in die DB geschrieben werden, fertig :)
+        # song_id, veroeffentlichung, label, land, musicid, musicbrainzscore	
+       # try:
+        #songs.schreibemusicbrainz((id, str(mb_jahr), str(mb_label), str(mb_land), str(mb_id), mb_score))
+        songs.schreibemusicbrainz((mb_id, mb_label, mb_land, mb_jahr, mb_score, eintrag['id']))
+        print("In DB eingetragen!")
+        # except:
+            # print("Eintragen fehlgeschlagen!")
+        
     except KeyError:
         print('!!!!!!!!!!!!!!!!!!!!!')
         print(eintrag['interpret'], ' ', eintrag['titel'], ': Fehler beim Lesen aus musicbrainz.')
@@ -50,6 +64,5 @@ for eintrag in songs.laden()[:10]:
     except UnicodeEncodeError:
         print('Unicode is a bitch :(')
 
-# Jetzt müssen die Daten noch in die DB geschrieben werden, fertig :)		
-		
+db.commit()	
 db.close()

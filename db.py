@@ -59,4 +59,14 @@ class songs:
     
     def laden(self):
         return self.cursor.execute("""SELECT * FROM songs
-            WHERE veroeffentlichung IS NULL;""").fetchall()
+            WHERE musicid IS NULL;""").fetchall()
+    
+    def schreibemusicbrainz(self, task):
+        sql ="""UPDATE songs
+        SET musicid = ?,
+            label = ?,
+            land = ?,
+            veroeffentlichung = ?,
+            musicbrainzscore = ?
+        WHERE id = ?"""
+        return self.cursor.execute(sql,task)
