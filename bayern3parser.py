@@ -31,6 +31,9 @@ while True:
                 bayern3.eintragen(datum_zeit, interpret, titel)
             except:
                 print(datum_zeit)
+                with open('errorbayern3.log', 'a') as f:
+                    f.write(datum_zeit + ' ' + url +' \n')
+                    f.close()
 
         # nächste URL
         url = 'http://www.br.de' + soup.find('p', 'playlist_navi_down').a.get('href')

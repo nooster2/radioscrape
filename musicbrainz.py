@@ -22,7 +22,7 @@ for eintrag in songs.laden():
         #for release in result['release-list']:
         
         # MB liefert ein dict zurück, das ich jetzt außeinanderpflüge und sortiere
-        mb_score = int(release['ext:score'])	
+        mb_score = int(release['ext:score'])
         mb_id = release['id']
         mb_interpret = release['artist-credit'][0]['artist']['name']
         mb_titel = release['title']
@@ -60,6 +60,10 @@ for eintrag in songs.laden():
         print(eintrag['interpret'], ' ', eintrag['titel'], ': Fehler beim Lesen aus musicbrainz.')
         print('!!!!!!!!!!!!!!!!!!!!!')
         print
+        with open('errormusicbrainz.log', 'a') as f:
+            logeintrag = '{"interpret" : "' + str(eintrag['interpret']) + '", "titel" : "' + str(eintrag['titel']) + '", "song-id" : "'+ str(eintrag['id']) + '"}, \n'
+            f.write(logeintrag)
+            f.close()
 
     except UnicodeEncodeError:
         print('Unicode is a bitch :(')
