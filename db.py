@@ -46,6 +46,10 @@ class bayern3:
         
         except sqlite3.IntegrityError: # Tritt auf, da die letzte URL vom letzten Mal Parsen nochmal abgearbeitet wird
             print('Schon in DB: ' + datum_zeit)
+            
+    def zaehlevorkommen(self, id):
+        return self.cursor.execute("SELECT count(song) FROM bayern3 WHERE song = ?;", (id)).fetchone()[0]
+        
     
     def get_letzte_url(self):
         return self.cursor.execute("SELECT url FROM letztesParsen WHERE id = 1").fetchone()[0]
@@ -60,7 +64,15 @@ class songs:
     def laden(self):
         return self.cursor.execute("""SELECT * FROM songs
             WHERE musicid IS NULL;""").fetchall()
-    
+            
+    def ladenalle(self):
+        return self.cursor.execute("""SELECT * FROM songs;""").fetchall()
+        
+    def ladeeinzelsong(self, id):
+        return self.cursor.execute("""SELECT * FROM songs
+            WHERE id = ?;
+            """, (id)).fetchone()
+            
     def schreibemusicbrainz(self, task):
         sql ="""UPDATE songs
         SET musicid = ?,
