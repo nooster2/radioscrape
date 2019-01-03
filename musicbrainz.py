@@ -14,7 +14,7 @@ songs = db.songs()
 for eintrag in songs.laden():
     try:
         # Jetzt wird geschaut, welche Daten MB für uns zu diesem Song parat hält
-        print()
+        #print()
         result = musicbrainzngs.search_releases(artist=eintrag['interpret'], release=eintrag['titel'])
         if bool(result['release-list']): # Manchmal ist ein Ergebnis-dict leer, siehe z.B. Interpret: Fibel, Titel: Paynesgrau
             release=result['release-list'][0]
@@ -58,10 +58,7 @@ for eintrag in songs.laden():
                 # print("Eintragen fehlgeschlagen!")
         
     except KeyError:
-        print('!!!!!!!!!!!!!!!!!!!!!')
-        print(eintrag['interpret'], ' ', eintrag['titel'], ': Fehler beim Lesen aus musicbrainz.')
-        print('!!!!!!!!!!!!!!!!!!!!!')
-        print
+        print('!!!!!', eintrag['interpret'], ' ', eintrag['titel'], ': Fehler beim Lesen aus musicbrainz.')
         with open('errormusicbrainz.log', 'a') as f:
             logeintrag = '{"interpret" : "' + str(eintrag['interpret']) + '", "titel" : "' + str(eintrag['titel']) + '", "song-id" : "'+ str(eintrag['id']) + '"}, \n'
             f.write(logeintrag)
