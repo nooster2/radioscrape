@@ -18,23 +18,28 @@ while True:
         
         # Datum aus URL ziehen
         datum = url.split('_date-')[1].split('_hour-')[0]
-        zeiten = soup.find('dl', 'music_research').find_all('dt', 'time')
-        # Einträge finden
-        for zeit in zeiten:
-            datum_zeit = datum + 'T' + zeit.string
-            li_titel_interpret = zeit.next_sibling.next_sibling.find('li', 'title')
-            interpret = li_titel_interpret.span.string
-            titel = li_titel_interpret.span.next_sibling.next_sibling.string
-            
-            # In Datenbank eintragen
-            try:
-                bayern3.eintragen(datum_zeit, interpret, titel)
-            except:
-                print(datum_zeit)
-                with open('errorbayern3.log', 'a') as f:
-                    f.write(datum_zeit + ' ' + url +' \n')
-                    f.close()
-
+        try:
+            zeiten = soup.find('dl', 'music_research').find_all('dt', 'time')
+            # Einträge finden
+            for zeit in zeiten:
+                datum_zeit = datum + 'T' + zeit.string
+                li_titel_interpret = zeit.next_sibling.next_sibling.find('li', 'title')
+                interpret = li_titel_interpret.span.string
+                titel = li_titel_interpret.span.next_sibling.next_sibling.string
+                
+                # In Datenbank eintragen
+                try:
+                    bayern3.eintragen(datum_zeit, interpret, titel)
+                except:
+                    print(datum_zeit)
+                    with open('errorbayern3.log', 'a') as f:
+                        f.write(datum_zeit + ' ' + url +' \n')
+                        f.close()
+        except AttributeError: # wenn keine Daten hinterlegt sind, erzeugt "zeiten=soup...." einen AttributeError
+            print("Keine Daten gefunden, gehe weiter. " + datum)
+            with open('errorbayern3.log', 'a') as f:
+                f.write('No Data found. '+ datum + ' ' + url +' \n')
+                f.close()
         # nächste URL
         url = 'http://www.br.de' + soup.find('p', 'playlist_navi_down').a.get('href')
 
