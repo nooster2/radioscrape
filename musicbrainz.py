@@ -39,14 +39,21 @@ for eintrag in songs.laden():
                 print('Score: ', mb_score, '    <--!!!!!!!')
             else:
                 print('Score: ', mb_score)
-            print('ID: ', mb_id)
-            print('Interpret: ', mb_interpret)
-            print('Titel: ', mb_titel)
-            print('Jahr: ', mb_jahr)
-            print('Label: ', mb_label)
-            print('Land: ', mb_land)
-            print('')
-            
+            #print('ID: ', mb_id)
+            #print('Interpret: ', mb_interpret)
+            #print('Titel: ', mb_titel)
+            #print('Jahr: ', mb_jahr)
+            #print('Label: ', mb_label)
+            #print('Land: ', mb_land)
+            #print('')
+            if mb_interpret.lower() == eintrag['interpret'].lower() and mb_titel.lower() == eintrag['titel'].lower():
+                print('done: ' + mb_interpret + ' - ' + mb_titel)
+            else:
+                print('!!!!! Unsinn: ' + mb_interpret + '('+str(eintrag['interpret'])+') - ' + mb_titel +'('+str(eintrag['titel'])+')')
+                with open('errormusicbrainz.log', 'a') as f:
+                    logeintrag = 'Unsinn: {"interpret" : "' + str(eintrag['interpret']) + '", "titel" : "' + str(eintrag['titel']) + '", "song-id" : "'+ str(eintrag['id']) + '"}, \n'
+                    f.write(logeintrag)
+                    f.close()
             # Jetzt müssen die Daten noch in die DB geschrieben werden, fertig :)
             # song_id, veroeffentlichung, label, land, musicid, musicbrainzscore	
            # try:
@@ -58,7 +65,7 @@ for eintrag in songs.laden():
                 # print("Eintragen fehlgeschlagen!")
         
     except KeyError:
-        print('!!!!!', eintrag['interpret'], ' ', eintrag['titel'], ': Fehler beim Lesen aus musicbrainz.')
+        print('!!!!! Not found: ', eintrag['interpret'], ' - ', eintrag['titel'], '')
         with open('errormusicbrainz.log', 'a') as f:
             logeintrag = '{"interpret" : "' + str(eintrag['interpret']) + '", "titel" : "' + str(eintrag['titel']) + '", "song-id" : "'+ str(eintrag['id']) + '"}, \n'
             f.write(logeintrag)
