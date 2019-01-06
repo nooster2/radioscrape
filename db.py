@@ -60,7 +60,10 @@ class songs:
     def laden(self):
         return self.cursor.execute("""SELECT * FROM songs
             WHERE musicid IS NULL;""").fetchall()
-    
+    def lfladen(self):
+        return self.cursor.execute("""SELECT * FROM songs
+            WHERE lfmbid IS NULL;""").fetchall()
+            
     def schreibemusicbrainz(self, task):
         sql ="""UPDATE songs
         SET musicid = ?,
@@ -68,5 +71,20 @@ class songs:
             land = ?,
             veroeffentlichung = ?,
             musicbrainzscore = ?
+        WHERE id = ?"""
+        return self.cursor.execute(sql,task)
+        
+    def AddLastFmToTable(self):
+        sql="alter table songs add column lfland text"
+        return self.cursor.execute(sql)
+        
+    def schreibelastfm(self, task):
+        sql ="""UPDATE songs
+        SET lfmbid = ?,
+            lfinterpret = ?,
+            lftitel = ?,
+            lfveroeffentlichung = ?,
+            lflabel = ?,
+            lfland = ?
         WHERE id = ?"""
         return self.cursor.execute(sql,task)
