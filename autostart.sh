@@ -1,7 +1,7 @@
 #!/bin/sh
 cd /c/Users/HP/Documents/git-Projekte/radioscrape
 git checkout master
-python bayern3parser.py
+/c/Users/HP/Anaconda3/python.exe bayern3parser.py
 git add .
 git commit -am "autostart: Daten geparst"
 git push
