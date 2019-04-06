@@ -47,9 +47,9 @@ for eintrag in songs.laden():
             #print('Land: ', mb_land)
             #print('')
             if mb_interpret.lower() == eintrag['interpret'].lower() and mb_titel.lower() == eintrag['titel'].lower():
-                print('done: ' + mb_interpret + ' - ' + mb_titel)
+                print('OK: ' + mb_interpret + ' - ' + mb_titel)
             else:
-                print('!!!!! Unsinn: ' + mb_interpret + '('+str(eintrag['interpret'])+') - ' + mb_titel +'('+str(eintrag['titel'])+')')
+                print('X Unsinn: ' + mb_interpret + '('+str(eintrag['interpret'])+') - ' + mb_titel +'('+str(eintrag['titel'])+')')
                 with open('errormusicbrainz.log', 'a') as f:
                     logeintrag = 'Unsinn: {"interpret" : "' + str(eintrag['interpret']) + '", "titel" : "' + str(eintrag['titel']) + '", "song-id" : "'+ str(eintrag['id']) + '"}, \n'
                     f.write(logeintrag)
@@ -60,12 +60,12 @@ for eintrag in songs.laden():
             #songs.schreibemusicbrainz((id, str(mb_jahr), str(mb_label), str(mb_land), str(mb_id), mb_score))
             songs.schreibemusicbrainz((mb_id, mb_label, mb_land, mb_jahr, mb_score, eintrag['id']))
             db.commit()
-            print("In DB eingetragen!")
+            print(" -> in DB eingetragen!")
             # except:
                 # print("Eintragen fehlgeschlagen!")
         
     except KeyError:
-        print('!!!!! Not found: ', eintrag['interpret'], ' - ', eintrag['titel'], '')
+        print('X Not found: ', eintrag['interpret'], ' - ', eintrag['titel'], '')
         with open('errormusicbrainz.log', 'a') as f:
             logeintrag = '{"interpret" : "' + str(eintrag['interpret']) + '", "titel" : "' + str(eintrag['titel']) + '", "song-id" : "'+ str(eintrag['id']) + '"}, \n'
             f.write(logeintrag)
@@ -74,5 +74,9 @@ for eintrag in songs.laden():
     except UnicodeEncodeError:
         print('Unicode is a bitch :(')
 
-	
+    except AttributeError:
+        print('AttributeError: #' + str(eintrag['id']))
+        
+    except:
+        print('sonstiger Fehler: #' + str(eintrag['id']))
 db.close()
