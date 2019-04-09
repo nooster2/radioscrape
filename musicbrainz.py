@@ -1,5 +1,6 @@
 import musicbrainzngs
 import db
+import re # damit werden Klammern aus dem Titel entfernt, z.B. I see fire (Single remix)
 # zum Initialisieren der API
 musicbrainzngs.set_useragent("radioscrape", "0.1", contact=None)
 # Doku: https://python-musicbrainzngs.readthedocs.io/en/v0.6/api/
@@ -14,8 +15,11 @@ songs = db.songs()
 for eintrag in songs.laden():
     try:
         # Jetzt wird geschaut, welche Daten MB für uns zu diesem Song parat hält
-        #print()
-        result = musicbrainzngs.search_releases(artist=eintrag['interpret'], release=eintrag['titel'])
+        interpret = eintrag['interpret']
+        titel = eintrag['titel']
+        titel = re.sub(r'\([^)]*\)', '', titel) # entfernt Klammer aus dem Titel https://im-coder.com/wie-kann-ich-text-in-klammern-mit-einem-regex-entfernen.html 
+        titel = re.sub(r'\[[^)]*\]', '', titel)
+        result = musicbrainzngs.search_releases(artist=interpret, release=titel)
         if bool(result['release-list']): # Manchmal ist ein Ergebnis-dict leer, siehe z.B. Interpret: Fibel, Titel: Paynesgrau
             release=result['release-list'][0]
             #print(release)
@@ -46,7 +50,7 @@ for eintrag in songs.laden():
             #print('Label: ', mb_label)
             #print('Land: ', mb_land)
             #print('')
-            if mb_interpret.lower() == eintrag['interpret'].lower() and mb_titel.lower() == eintrag['titel'].lower():
+            if mb_interpret.lower() == interpret.lower() and mb_titel.lower() == titel.lower():
                 print('OK: ' + mb_interpret + ' - ' + mb_titel)
             else:
                 print('X Unsinn: ' + mb_interpret + '('+str(eintrag['interpret'])+') - ' + mb_titel +'('+str(eintrag['titel'])+')')
