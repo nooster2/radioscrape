@@ -20,7 +20,7 @@ def daterange(start_date, end_date):
 
 
 # Daten aus Datenbank laden
-connection = sqlite3.connect('../db.sqlite3')
+connection = sqlite3.connect('./db.sqlite3')
 df = pd.read_sql_query("""SELECT bayern3.id, datum_zeit, interpret, titel, label FROM bayern3 
                         INNER JOIN songs ON bayern3.song=songs.id""", connection, index_col='id')
 connection.close()
@@ -59,6 +59,6 @@ plt.pyplot.figure(figsize=(10, 16))
 heatmap = sns.heatmap(ergebnisdf, annot=True, fmt="g", cbar=False, cmap="RdYlGn")
 
 # Heatmap exportieren
-savename = 'out_'+str(end_date)+'.png'
+savename = './Auswertung/img/out_'+str(end_date)+'.png'
 fig = heatmap.get_figure()
 fig.savefig(savename) 
