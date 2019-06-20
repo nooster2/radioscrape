@@ -10,8 +10,8 @@ import seaborn as sns  # für das Styling der Ausgabe https://pandas.pydata.org/
 # Ziel: Wie viele Songs wurden am Tag gespielt. Am besten für das ganze Jahr
 
 # Erstmal das heutige Datum feststellen
-end_date = datetime.date(2017, 12, 31)#datetime.date.today()
-start_date = datetime.date(2017, 1, 1)#datetime.date(2019, 1, 1)
+end_date = datetime.date.today()
+start_date = datetime.date(2019, 1, 1)
 
 # Quelle: https://stackoverflow.com/questions/1060279/iterating-through-a-range-of-dates-in-python 
 def daterange(start_date, end_date): 
@@ -40,7 +40,7 @@ ergebnis = np.zeros([31,12])
 for monat in range(1,13):
     for tag in range(1,32):
         try: 
-            ergebnis[tag-1][monat-1] = vergleich[datetime.date(2017,monat,tag)]['datum_zeit']
+            ergebnis[tag-1][monat-1] = vergleich[datetime.date(2019,monat,tag)]['datum_zeit']
         except:
             pass
             
