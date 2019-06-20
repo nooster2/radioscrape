@@ -10,8 +10,8 @@ import seaborn as sns  # für das Styling der Ausgabe https://pandas.pydata.org/
 # Ziel: Wie viele Songs wurden am Tag gespielt. Am besten für das ganze Jahr
 
 # Erstmal das heutige Datum feststellen
-end_date = datetime.date.today()
-start_date = datetime.date(2019, 1, 1)
+end_date = datetime.date(2017, 12, 31)#datetime.date.today()
+start_date = datetime.date(2017, 1, 1)#datetime.date(2019, 1, 1)
 
 # Quelle: https://stackoverflow.com/questions/1060279/iterating-through-a-range-of-dates-in-python 
 def daterange(start_date, end_date): 
@@ -40,12 +40,13 @@ ergebnis = np.zeros([31,12])
 for monat in range(1,13):
     for tag in range(1,32):
         try: 
-            ergebnis[tag-1][monat-1] = vergleich[datetime.date(2019,monat,tag)]['datum_zeit']
+            ergebnis[tag-1][monat-1] = vergleich[datetime.date(2017,monat,tag)]['datum_zeit']
         except:
             pass
             
 # Erstelle einen Dataframe daraus:
-ergebnisdf = pd.DataFrame(data=ergebnis, index=range(1,32), columns=range(1,13))
+monatsnamen = ['Jan','Feb', 'Mar', 'Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez']
+ergebnisdf = pd.DataFrame(data=ergebnis, index=range(1,32), columns=monatsnamen)
 
 
 # Seaborn Bedingte Formatierung
@@ -55,10 +56,26 @@ ergebnisbild = ergebnisdf.style.background_gradient(cmap=cm)
 # Seaborn Heatmap
 # https://seaborn.pydata.org/generated/seaborn.heatmap.html
 # https://matplotlib.org/users/colormaps.html
+
+# nicht vorhandene Tage maskieren
+mask = np.zeros_like(ergebnisdf, dtype=np.bool)
+for x in range(0,12):
+    for y in range(0,31):
+        try: 
+            monat = x+1
+            tag = y+1
+            datetime.datetime(year=2019, month=monat, day=tag)
+            mask[y][x] = 0
+        except ValueError:
+            mask[y][x] = 1
+
 plt.pyplot.figure(figsize=(10, 16))
-heatmap = sns.heatmap(ergebnisdf, annot=True, fmt="g", cbar=False, cmap="RdYlGn")
+plt.pyplot.xlabel('Monate')
+plt.pyplot.ylabel('Tage')
+
+heatmap = sns.heatmap(ergebnisdf, annot=True, fmt="g", cbar=False, cmap="RdYlGn", mask=mask)
 
 # Heatmap exportieren
 savename = './Auswertung/img/out_'+str(end_date)+'.png'
 fig = heatmap.get_figure()
-fig.savefig(savename) 
+fig.savefig(savename, bbox_inches='tight')
