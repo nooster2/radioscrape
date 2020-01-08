@@ -40,7 +40,7 @@ ergebnis = np.zeros([31,12])
 for monat in range(1,13):
     for tag in range(1,32):
         try: 
-            ergebnis[tag-1][monat-1] = vergleich[datetime.date(2019,monat,tag)]['datum_zeit']
+            ergebnis[tag-1][monat-1] = vergleich[datetime.date(2020,monat,tag)]['datum_zeit']
         except:
             pass
             
@@ -79,3 +79,4 @@ heatmap = sns.heatmap(ergebnisdf, annot=True, fmt="g", cbar=False, cmap="RdYlGn"
 savename = './Auswertung/img/out_'+str(end_date)+'.png'
 fig = heatmap.get_figure()
 fig.savefig(savename, bbox_inches='tight')
+fig.savefig('./Auswertung/img/aa_latest.png', bbox_inches='tight')
