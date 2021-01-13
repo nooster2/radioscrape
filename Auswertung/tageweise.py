@@ -11,7 +11,7 @@ import seaborn as sns  # für das Styling der Ausgabe https://pandas.pydata.org/
 
 # Erstmal das heutige Datum feststellen
 end_date = datetime.date.today()
-start_date = datetime.date(2020, 1, 1)
+start_date = datetime.date(2021, 1, 1)
 
 # Quelle: https://stackoverflow.com/questions/1060279/iterating-through-a-range-of-dates-in-python 
 def daterange(start_date, end_date): 
