@@ -40,7 +40,7 @@ ergebnis = np.zeros([31,12])
 for monat in range(1,13):
     for tag in range(1,32):
         try: 
-            ergebnis[tag-1][monat-1] = vergleich[datetime.date(2020,monat,tag)]['datum_zeit']
+            ergebnis[tag-1][monat-1] = vergleich[datetime.date(2021,monat,tag)]['datum_zeit']
         except:
             pass
             
@@ -64,7 +64,7 @@ for x in range(0,12):
         try: 
             monat = x+1
             tag = y+1
-            datetime.datetime(year=2020, month=monat, day=tag)
+            datetime.datetime(year=2021, month=monat, day=tag)
             mask[y][x] = 0
         except ValueError:
             mask[y][x] = 1
